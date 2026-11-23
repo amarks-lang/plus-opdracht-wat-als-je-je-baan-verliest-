@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plus-opdrachten · Leerkracht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--roest:#9e3a16;--oranje:#d86313;--geel:#f3aa19;--groen:#6fa32e;--lime:#b3be11;
+        --bg:#f7f3ec;--kaart:#fff;--tekst:#2b2118;--zacht:#6b5d50;--lijn:#e6dccd}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--bg);color:var(--tekst);font-family:"Nunito",system-ui,sans-serif;font-size:16px;line-height:1.45}
+  .top{background:var(--roest);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .top h1{font-size:20px;margin:0;font-weight:900}
+  .top .wie{margin-left:auto;font-size:14px;opacity:.9}
+  .top button{font:inherit;font-size:14px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:999px;padding:5px 12px;cursor:pointer}
+  .wrap{max-width:1200px;margin:0 auto;padding:18px 20px 60px}
+  .kaart{background:var(--kaart);border-radius:16px;padding:18px;box-shadow:0 1px 0 var(--lijn),0 4px 14px rgba(80,50,20,.05);margin-bottom:16px}
+  h2{margin:0 0 10px;font-size:20px;font-weight:900}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tabs button{font:inherit;font-weight:800;border:none;background:#ebe2d4;padding:8px 16px;border-radius:10px;cursor:pointer}
+  .tabs button.aan{background:var(--tekst);color:#fff}
+  .knop{font:inherit;font-weight:800;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;background:var(--groen);color:#fff}
+  .knop.grijs{background:#ebe2d4;color:var(--tekst)}
+  .knop.rood{background:var(--roest)}
+  .knop:disabled{opacity:.5;cursor:default}
+  select,input[type=text],textarea{font:inherit;padding:8px 10px;border-radius:10px;border:2px solid var(--lijn);background:#fffdf9}
+  select:focus,input:focus,textarea:focus{outline:none;border-color:var(--oranje)}
+  label.veld{display:block;font-weight:800;font-size:14px;margin:10px 0 4px}
+  .rij{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+  .chip{background:#f2ebdf;border-radius:999px;padding:4px 12px;font-weight:800;font-size:14px}
+  .melding{font-weight:800;min-height:1.3em;margin-top:8px}
+  .melding.ok{color:var(--groen)} .melding.fout{color:var(--roest)}
+  .uitleg{color:var(--zacht);font-size:14px}
+  code{background:#f2ebdf;border-radius:6px;padding:1px 6px;font-size:14px;word-break:break-all}
+
+  /* overzichtstabel */
+  .tabelwrap{overflow-x:auto;margin-top:14px}
+  table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}
+  th,td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--lijn);white-space:nowrap}
+  th{font-size:13px;color:var(--zacht);font-weight:900;position:sticky;top:0;background:var(--kaart)}
+  th.groep{border-bottom:none;padding-bottom:0}
+  td.naam,th.naam{text-align:left;font-weight:800}
+  tbody tr{cursor:pointer}
+  tbody tr:hover td{background:#fbf6ee}
+  tbody tr.gekozen td{background:#fdf1e3}
+  tbody tr.leeg td{color:#b6a993}
+  .c{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-weight:900;font-size:14px}
+  .c.goed{background:#e1f0d1;color:#3d6614}
+  .c.bijna{background:#fde6cf;color:#8a4207}
+  .c.ingevuld{background:#ece4d6;color:var(--tekst)}
+  .c.leeg{color:#c8bba6}
+  .score{font-weight:900}
+  .tag{display:inline-block;font-size:12px;font-weight:900;border-radius:6px;padding:1px 7px}
+  .tag.in{background:#e1f0d1;color:#3d6614}
+  .tag.nk{background:var(--tekst);color:#fff}
+
+  /* detail */
+  .detail h2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .onderdelen{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:8px}
+  .od{border:2px solid var(--lijn);border-radius:12px;padding:10px 12px}
+  .od.goed{border-color:#bfdc9f} .od.bijna{border-color:#f5c99a}
+  .od .v{font-size:13px;color:var(--zacht);font-weight:700}
+  .od .a{white-space:pre-wrap;font-size:17px;margin:4px 0 6px;min-height:1.4em}
+  .od .a.leeg{color:#b6a993;font-style:italic}
+  .od .m{font-size:13px;color:var(--zacht);background:#f7f3ec;border-radius:8px;padding:5px 8px}
+  .nakijk{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:14px;align-items:start}
+  .nakijk textarea{width:100%;min-height:70px}
+  @media (max-width:700px){.nakijk{grid-template-columns:1fr}}
+
+  /* klassen */
+  .klassen{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .klas{border:2px solid var(--lijn);border-radius:12px;padding:12px;cursor:pointer}
+  .klas:hover{border-color:var(--oranje)}
+  .klas b{display:block;font-size:17px}
+  #accTabel td,#accTabel th{text-align:left}
+  .pincode{font-weight:900;letter-spacing:.15em;font-size:16px}
+  .demo{background:#fff7dd;border-radius:10px;padding:8px 12px;font-size:14px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>⭐ Plus-opdrachten · Leerkracht</h1>
+  <span class="wie" id="wie"></span>
+  <button id="uitlog" hidden>Uitloggen</button>
+</div>
+
+<div class="wrap">
+  <div class="demo" id="demoMelding" hidden>🧪 Demo-modus: nog geen Firebase gekoppeld. Alles staat alleen in deze browser. Klascode voor leerlingen: <b>demo</b>.</div>
+
+  <!-- login -->
+  <section class="kaart" id="loginKaart" hidden>
+    <h2>Inloggen</h2>
+    <p>Log in met je schoolaccount (Google) om werk na te kijken en klassen te beheren.</p>
+    <button class="knop" id="loginKnop">Inloggen met Google</button>
+    <div class="melding fout" id="loginFout"></div>
+  </section>
+
+  <div id="app" hidden>
+    <div class="tabs">
+      <button data-tab="nakijken" class="aan">📋 Nakijken</button>
+      <button data-tab="klassen">👥 Klassen</button>
+    </div>
+
+    <!-- ============ NAKIJKEN ============ -->
+    <section id="tab-nakijken">
+      <div class="kaart">
+        <div class="rij">
+          <div><label class="veld" for="selKlas">Klas</label><select id="selKlas"></select></div>
+          <div><label class="veld" for="selOpdracht">Opdracht</label><select id="selOpdracht"></select></div>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="tabelwrap"><table id="tabel"></table></div>
+        <p class="uitleg">Klik op een leerling om de antwoorden te zien. <span class="c goed">✓</span> goed nagekeken door de app · <span class="c bijna">~</span> nog niet goed · <span class="c ingevuld">?</span> ingevuld, niet gecontroleerd / open vraag · <span class="c leeg">–</span> leeg. Het overzicht ververst vanzelf.</p>
+      </div>
+
+      <div class="kaart detail" id="detail" hidden>
+        <h2><span id="dNaam"></span> <span id="dTags"></span></h2>
+        <div class="uitleg" id="dTijd"></div>
+        <div class="onderdelen" id="dOnderdelen"></div>
+        <div class="nakijk">
+          <div>
+            <label class="veld" for="dFeedback">Bericht aan de leerling (ziet het kind bovenaan de opdracht)</label>
+            <textarea id="dFeedback" placeholder="Bijv. Knap gezocht! Kijk vraag b nog eens: je mist nog een eis."></textarea>
+          </div>
+          <div>
+            <label class="veld"><input type="checkbox" id="dNagekeken"> Nagekeken</label>
+            <div class="rij" style="margin-top:6px">
+              <button class="knop" id="dOpslaan">Opslaan</button>
+              <button class="knop grijs" id="dVolgende">Volgende ➜</button>
+            </div>
+            <div class="melding" id="dMelding"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KLASSEN ============ -->
+    <section id="tab-klassen" hidden>
+      <div class="kaart">
+        <h2>Mijn klassen</h2>
+        <div class="klassen" id="klassenLijst"></div>
+        <div style="margin-top:12px"><button class="knop" id="nieuweKlas">+ Nieuwe klas</button></div>
+      </div>
+      <div class="kaart" id="klasForm" hidden>
+        <h2 id="kTitel">Nieuwe klas</h2>
+        <label class="veld" for="kNaam">Naam van de klas</label>
+        <input type="text" id="kNaam" placeholder="Groep 5/6" style="width:100%;max-width:360px">
+        <label class="veld" for="kCode">Klascode (typen leerlingen in)</label>
+        <div class="rij">
+          <input type="text" id="kCode" style="max-width:220px">
+          <button class="knop grijs" id="kNieuweCode">🎲 Andere code</button>
+        </div>
+        <p class="uitleg">Kies een code die niet makkelijk te raden is. Na opslaan kun je de code niet meer veranderen.</p>
+        <div class="rij">
+          <button class="knop" id="kOpslaan">Opslaan</button>
+          <button class="knop grijs" id="kAnnuleer">Annuleren</button>
+          <button class="knop rood" id="kVerwijder" hidden>Klas verwijderen</button>
+        </div>
+        <div id="kVerwijderVraag" hidden style="margin-top:10px;background:#fdeedd;border-radius:10px;padding:10px">
+          Weet je het zeker? De klas wordt verwijderd (accounts en werk van leerlingen blijven in de database staan).
+          <div class="rij" style="margin-top:8px"><button class="knop rood" id="kVerwijderJa">Ja, verwijderen</button><button class="knop grijs" id="kVerwijderNee">Nee</button></div>
+        </div>
+        <div class="melding" id="kMelding"></div>
+        <div id="kLink" class="uitleg" style="margin-top:10px"></div>
+      </div>
+      <div class="kaart" id="accKaart" hidden>
+        <h2>Leerlingen in deze klas</h2>
+        <p class="uitleg">Leerlingen maken zelf een login aan met hun voornaam en een code van 4 cijfers. Code vergeten? Die vind je hier. Verwijder je een leerling, dan is de naam weer vrij om opnieuw aan te maken (het oude werk blijft bewaard).</p>
+        <table id="accTabel"></table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script type="module">
+import { DEMO, volgLeerkracht, loginLeerkracht, logoutLeerkracht, isLeerkracht,
+         lijstKlassen, bewaarKlas, verwijderKlas, volgWerk, volgAccounts, verwijderAccount,
+         bewaarNakijk, werkId } from "./firebase.js";
+import { OPDRACHTEN } from "./opdrachten.js";
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+if (DEMO) $("demoMelding").hidden = false;
+
+let klassen = [], werk = [], accounts = [], stopVolgen = [], gekozen = null;
+
+// ================= INLOGGEN =================
+volgLeerkracht(async u => {
+  if (u && isLeerkracht(u)) {
+    $("loginKaart").hidden = true; $("app").hidden = false;
+    $("wie").textContent = u.email; $("uitlog").hidden = DEMO;
+    await laadKlassen();
+  } else {
+    $("app").hidden = true; $("loginKaart").hidden = false; $("uitlog").hidden = !u; $("wie").textContent = u ? u.email : "";
+    $("loginFout").textContent = u ? "Dit account heeft geen toegang. Log in met je eigen schoolaccount." : "";
+  }
+});
+$("loginKnop").addEventListener("click", async () => {
+  $("loginFout").textContent = "";
+  try { await loginLeerkracht(); } catch (e) { console.error(e); $("loginFout").textContent = "Inloggen lukte niet (" + (e.code || e.message) + ")."; }
+});
+$("uitlog").addEventListener("click", () => logoutLeerkracht());
+
+// ================= TABS =================
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("aan", x === b));
+  $("tab-nakijken").hidden = b.dataset.tab !== "nakijken";
+  $("tab-klassen").hidden = b.dataset.tab !== "klassen";
+}));
+
+// ================= KLASSEN LADEN =================
+async function laadKlassen() {
+  klassen = (await lijstKlassen()).sort((a, b) => (a.naam || "").localeCompare(b.naam || "", "nl"));
+  // selects
+  const sk = $("selKlas"), oud = sk.value;
+  sk.innerHTML = "";
+  klassen.forEach(k => sk.appendChild(new Option(`${k.naam} (${k.code})`, k.code)));
+  if (oud && klassen.some(k => k.code === oud)) sk.value = oud;
+  const so = $("selOpdracht");
+  if (!so.options.length) OPDRACHTEN.forEach(o => so.appendChild(new Option(o.titel, o.id)));
+  tekenKlassenLijst();
+  if (!klassen.length) {
+    $("tabel").innerHTML = ""; $("chips").innerHTML = "";
+    $("chips").appendChild(el("span", "chip", "Nog geen klas. Maak er eerst een aan bij 👥 Klassen."));
+  }
+  startVolgen();
+}
+$("selKlas").addEventListener("change", startVolgen);
+$("selOpdracht").addEventListener("change", startVolgen);
+
+async function startVolgen() {
+  stopVolgen.forEach(f => f()); stopVolgen = [];
+  gekozen = null; $("detail").hidden = true; werk = []; accounts = [];
+  const k = $("selKlas").value, o = $("selOpdracht").value;
+  if (!k || !o) return;
+  const ververs = () => { tekenTabel(); if (gekozen) tekenDetail(gekozen, true); };
+  stopVolgen.push(await volgAccounts(k, l => { accounts = l; ververs(); }));
+  stopVolgen.push(await volgWerk(k, o, l => { werk = l; ververs(); }));
+}
+
+const huidigeKlas = () => klassen.find(k => k.code === $("selKlas").value);
+const huidigeOpdracht = () => OPDRACHTEN.find(o => o.id === $("selOpdracht").value);
+const werkVan = acct => werk.find(w => w.acct === acct);
+// alle rijen: elk account + werk waarvan het account verwijderd is
+function rijen() {
+  const r = accounts.map(a => ({ acct: a.acct, naam: a.naam, pin: a.pin }));
+  werk.forEach(w => { if (!r.some(x => x.acct === w.acct)) r.push({ acct: w.acct, naam: w.leerling + " (verwijderd)", pin: "" }); });
+  return r.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
+}
+
+function celStatus(o, w) {
+  const a = ((w && w.antwoorden) || {})[o.id] || "", s = ((w && w.status) || {})[o.id];
+  if (!a.trim()) return ["leeg", "–"];
+  if (o.open) return ["ingevuld", "✎"];
+  if (s === "goed") return ["goed", "✓"];
+  if (s === "bijna") return ["bijna", "~"];
+  return ["ingevuld", "?"];
+}
+function tijd(ms) {
+  if (!ms) return "";
+  const d = new Date(ms), nu = new Date();
+  const t = d.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+  return d.toDateString() === nu.toDateString() ? "vandaag " + t : d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" }) + " " + t;
+}
+
+// ================= TABEL =================
+function tekenTabel() {
+  const k = huidigeKlas(), o = huidigeOpdracht(), t = $("tabel");
+  t.innerHTML = "";
+  if (!k || !o) return;
+  const nakijkbaar = o.onderdelen.filter(x => !x.open).length;
+
+  // chips
+  const begonnen = werk.length, inl = werk.filter(w => w.ingeleverd).length, nk = werk.filter(w => w.nagekeken).length;
+  $("chips").innerHTML = "";
+  [`${accounts.length} leerlingen`, `${begonnen} begonnen`, `${inl} ingeleverd`, `${nk} nagekeken`]
+    .forEach(s => $("chips").appendChild(el("span", "chip", s)));
+
+  const thead = el("thead"), hr = el("tr");
+  hr.appendChild(el("th", "naam", "Leerling"));
+  o.onderdelen.forEach(x => { const th = el("th", "", x.kort); th.title = x.vraag; hr.appendChild(th); });
+  ["Score", "Status", "Bijgewerkt"].forEach(s => hr.appendChild(el("th", "", s)));
+  thead.appendChild(hr); t.appendChild(thead);
+
+  const tb = el("tbody");
+  const alle = rijen();
+  if (!alle.length) {
+    const tr = el("tr"), td = el("td", "uitleg", "Nog geen leerlingen. Leerlingen maken zelf een login aan met de klascode.");
+    td.colSpan = o.onderdelen.length + 4; tr.appendChild(td); tb.appendChild(tr);
+  }
+  alle.forEach(r => {
+    const w = werkVan(r.acct), tr = el("tr", w ? "" : "leeg");
+    tr.dataset.acct = r.acct;
+    if (gekozen === r.acct) tr.classList.add("gekozen");
+    tr.appendChild(el("td", "naam", r.naam));
+    let goed = 0;
+    o.onderdelen.forEach(x => {
+      const [c, s] = celStatus(x, w); if (c === "goed") goed++;
+      const td = el("td"); td.appendChild(el("span", "c " + c, s)); tr.appendChild(td);
+    });
+    tr.appendChild(el("td", "score", w ? `${goed}/${nakijkbaar}` : ""));
+    const st = el("td");
+    if (!w) st.textContent = "niet begonnen";
+    else {
+      if (w.ingeleverd) st.appendChild(el("span", "tag in", "ingeleverd"));
+      if (w.nagekeken) { st.appendChild(document.createTextNode(" ")); st.appendChild(el("span", "tag nk", "nagekeken")); }
+      if (!w.ingeleverd && !w.nagekeken) st.textContent = "bezig";
+    }
+    tr.appendChild(st);
+    tr.appendChild(el("td", "uitleg", w ? tijd(w.bijgewerkt) : ""));
+    tr.addEventListener("click", () => tekenDetail(r.acct));
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+// ================= DETAIL =================
+function tekenDetail(acct, verversing) {
+  const o = huidigeOpdracht(), w = werkVan(acct), r = rijen().find(x => x.acct === acct);
+  if (!r) { $("detail").hidden = true; gekozen = null; return; }
+  gekozen = acct;
+  document.querySelectorAll("#tabel tbody tr").forEach(tr => tr.classList.toggle("gekozen", tr.dataset.acct === acct));
+  $("detail").hidden = false;
+  $("dNaam").textContent = r.naam + (r.pin ? "  ·  code " + r.pin : "");
+  const tags = $("dTags"); tags.innerHTML = "";
+  if (w && w.ingeleverd) tags.appendChild(el("span", "tag in", "ingeleverd"));
+  if (w && w.nagekeken) { tags.appendChild(document.createTextNode(" ")); tags.appendChild(el("span", "tag nk", "nagekeken")); }
+  $("dTijd").textContent = w ? "Laatst bijgewerkt: " + tijd(w.bijgewerkt) : "Deze leerling is nog niet begonnen.";
+  const box = $("dOnderdelen"); box.innerHTML = "";
+  o.onderdelen.forEach(x => {
+    const [c] = celStatus(x, w), a = ((w && w.antwoorden) || {})[x.id] || "";
+    const d = el("div", "od " + c);
+    d.appendChild(el("div", "v", `${x.kort} · ${x.vraag}`));
+    const ant = el("div", "a" + (a.trim() ? "" : " leeg"), a.trim() ? (x.reken ? "€ " + a : a) : "niet ingevuld");
+    d.appendChild(ant);
+    d.appendChild(el("div", "m", "Model: " + x.model));
+    box.appendChild(d);
+  });
+  // niet overschrijven wat je aan het typen bent bij een live verversing
+  if (!verversing) {
+    $("dFeedback").value = (w && w.feedback) || "";
+    $("dNagekeken").checked = !!(w && w.nagekeken);
+    $("dMelding").textContent = "";
+    $("detail").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+$("dOpslaan").addEventListener("click", async () => {
+  if (!gekozen) return;
+  const k = $("selKlas").value, o = $("selOpdracht").value, w = werkVan(gekozen);
+  const r = rijen().find(x => x.acct === gekozen);
+  const basis = w ? {} : { acct: gekozen, leerling: r ? r.naam : "", opdracht: o, antwoorden: {}, status: {}, ingeleverd: false };
+  $("dOpslaan").disabled = true;
+  try {
+    await bewaarNakijk(k, werkId(o, gekozen), basis, { feedback: $("dFeedback").value.trim(), nagekeken: $("dNagekeken").checked });
+    $("dMelding").className = "melding ok"; $("dMelding").textContent = "Opgeslagen ✓";
+  } catch (e) {
+    console.error(e); $("dMelding").className = "melding fout"; $("dMelding").textContent = "Opslaan mislukt.";
+  } finally { $("dOpslaan").disabled = false; }
+});
+$("dVolgende").addEventListener("click", () => {
+  const ids = [...document.querySelectorAll("#tabel tbody tr")].map(tr => tr.dataset.acct).filter(Boolean);
+  const i = ids.indexOf(gekozen);
+  if (ids.length) tekenDetail(ids[(i + 1) % ids.length]);
+});
+
+// ================= KLASSEN BEHEREN =================
+let bewerk = null;
+const nieuweCode = () => "linde-" + Array.from({ length: 4 }, () => "abcdefghjkmnpqrstuvwxyz23456789"[Math.floor(Math.random() * 31)]).join("");
+function tekenKlassenLijst() {
+  const box = $("klassenLijst"); box.innerHTML = "";
+  if (!klassen.length) box.appendChild(el("p", "uitleg", "Nog geen klassen."));
+  klassen.forEach(k => {
+    const d = el("div", "klas");
+    d.appendChild(el("b", "", k.naam));
+    d.appendChild(el("div", "uitleg", `Klascode: ${k.code}`));
+    d.addEventListener("click", () => openForm(k));
+    box.appendChild(d);
+  });
+}
+function openForm(k) {
+  bewerk = k || null;
+  $("klasForm").hidden = false;
+  $("kTitel").textContent = k ? "Klas bewerken" : "Nieuwe klas";
+  $("kNaam").value = k ? k.naam : "";
+  $("kCode").value = k ? k.code : nieuweCode();
+  $("kCode").disabled = !!k; $("kNieuweCode").hidden = !!k;
+  $("kVerwijder").hidden = !k; $("kVerwijderVraag").hidden = true;
+  $("kMelding").textContent = "";
+  toonLink(k ? k.code : null);
+  volgKlasAccounts(k ? k.code : null);
+  $("klasForm").scrollIntoView({ behavior: "smooth" });
+}
+let stopAcc = null;
+async function volgKlasAccounts(code) {
+  if (stopAcc) { stopAcc(); stopAcc = null; }
+  $("accKaart").hidden = !code;
+  if (!code) return;
+  stopAcc = await volgAccounts(code, lijst => tekenAccounts(code, lijst));
+}
+function tekenAccounts(code, lijst) {
+  const t = $("accTabel"); t.innerHTML = "";
+  if (!lijst.length) { t.appendChild(el("tr")).appendChild(el("td", "uitleg", "Nog niemand heeft een login gemaakt.")); return; }
+  const hr = el("tr"); ["Naam", "Code", "Aangemaakt", ""].forEach(h => hr.appendChild(el("th", "", h))); t.appendChild(hr);
+  lijst.sort((a, b) => a.naam.localeCompare(b.naam, "nl")).forEach(a => {
+    const tr = el("tr");
+    tr.appendChild(el("td", "naam", a.naam));
+    tr.appendChild(el("td", "pincode", a.pin));
+    tr.appendChild(el("td", "uitleg", a.aangemaakt ? tijd(a.aangemaakt) : ""));
+    const td = el("td"), b = el("button", "knop grijs", "Verwijder");
+    b.style.cssText = "font-size:13px;padding:4px 10px";
+    b.addEventListener("click", async () => {
+      if (b.dataset.zeker !== "1") { b.dataset.zeker = "1"; b.textContent = "Zeker weten?"; b.className = "knop rood"; return; }
+      b.disabled = true;
+      try { await verwijderAccount(code, a.acct, a.naamKey); } catch (e) { console.error(e); b.textContent = "Mislukt"; }
+    });
+    td.appendChild(b); tr.appendChild(td); t.appendChild(tr);
+  });
+}
+function toonLink(code) {
+  const box = $("kLink"); box.innerHTML = "";
+  if (!code) return;
+  box.appendChild(document.createTextNode("Links voor leerlingen (bijv. in Yurls): "));
+  OPDRACHTEN.forEach(o => {
+    const url = new URL(o.bestand, location.href).href;
+    box.appendChild(el("br")); box.appendChild(el("code", "", url));
+  });
+  box.appendChild(el("br")); box.appendChild(document.createTextNode("Leerlingen typen daar de klascode in: "));
+  box.appendChild(el("code", "", code));
+}
+$("nieuweKlas").addEventListener("click", () => openForm(null));
+$("kNieuweCode").addEventListener("click", () => $("kCode").value = nieuweCode());
+$("kAnnuleer").addEventListener("click", () => { $("klasForm").hidden = true; volgKlasAccounts(null); });
+$("kOpslaan").addEventListener("click", async () => {
+  const m = $("kMelding"); m.className = "melding fout";
+  const naam = $("kNaam").value.trim();
+  const code = $("kCode").value.trim().toLowerCase();
+  if (!naam) { m.textContent = "Geef de klas een naam."; return; }
+  if (!/^[a-z0-9-]{4,30}$/.test(code)) { m.textContent = "Klascode: 4–30 tekens, alleen kleine letters, cijfers en -."; return; }
+  if (!bewerk && klassen.some(k => k.code === code)) { m.textContent = "Deze klascode bestaat al."; return; }
+  $("kOpslaan").disabled = true;
+  try {
+    await bewaarKlas(code, { naam });
+    m.className = "melding ok"; m.textContent = "Opgeslagen ✓";
+    bewerk = { code, naam };
+    volgKlasAccounts(code);
+    $("kCode").disabled = true; $("kNieuweCode").hidden = true; $("kVerwijder").hidden = false;
+    toonLink(code);
+    await laadKlassen();
+  } catch (e) { console.error(e); m.textContent = "Opslaan mislukt (" + (e.code || e.message) + ")."; }
+  finally { $("kOpslaan").disabled = false; }
+});
+$("kVerwijder").addEventListener("click", () => $("kVerwijderVraag").hidden = false);
+$("kVerwijderNee").addEventListener("click", () => $("kVerwijderVraag").hidden = true);
+$("kVerwijderJa").addEventListener("click", async () => {
+  if (!bewerk) return;
+  try { await verwijderKlas(bewerk.code); $("klasForm").hidden = true; volgKlasAccounts(null); await laadKlassen(); }
+  catch (e) { console.error(e); $("kMelding").textContent = "Verwijderen mislukt."; }
+});
+</script>
+</body>
+</html>

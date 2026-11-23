@@ -1,0 +1,97 @@
+rules_version = '2';
+
+// Plus-opdrachten — beveiliging
+//
+// Structuur per klas (klassen/{klascode}):
+//   namen/{naamKey}     → { naam }                 wie welke naam al heeft (geen geheimen)
+//   accounts/{acct}     → { naam, naamKey, pin }   acct = hash(klas + naam + code)
+//   werk/{opdracht__acct} → antwoorden van één leerling voor één opdracht
+//
+// Leerlingen (anoniem ingelogd) mogen:
+//   - een klas ophalen als ze de klascode weten (niet alle klassen opvragen)
+//   - zelf een account maken met een naam die nog vrij is
+//   - alleen hun eigen account/werk openen (daarvoor moet je naam + code weten)
+//   - NIET de lijst met namen, accounts of codes opvragen
+//   - NIET de feedback of 'nagekeken' van de leerkracht aanpassen
+// De leerkracht (Google-account hieronder) mag alles.
+//
+// !! Vervang het e-mailadres hieronder door jouw eigen schoolaccount !!
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isLeerkracht() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['jouw.naam@levwn.nl'];
+    }
+    function ingelogd() { return request.auth != null; }
+
+    match /klassen/{klas} {
+      allow get: if ingelogd();
+      allow read, write: if isLeerkracht();
+
+      function klasBestaat() {
+        return exists(/databases/$(database)/documents/klassen/$(klas));
+      }
+
+      // ---- namen: alleen nieuw aanmaken, nooit overschrijven ----
+      match /namen/{naamKey} {
+        allow get: if ingelogd();
+        allow create: if ingelogd() && klasBestaat()
+          && request.resource.data.keys().hasOnly(['naam'])
+          && request.resource.data.naam is string
+          && request.resource.data.naam.size() > 0
+          && request.resource.data.naam.size() <= 30
+          && naamKey.size() <= 30;
+        allow read, write: if isLeerkracht();
+      }
+
+      // ---- accounts: alleen samen met een nieuwe (vrije) naam ----
+      match /accounts/{acct} {
+        allow get: if ingelogd();
+        allow create: if ingelogd() && klasBestaat()
+          && request.resource.data.keys().hasOnly(['naam', 'naamKey', 'pin', 'aangemaakt'])
+          && request.resource.data.pin is string
+          && request.resource.data.pin.matches('^[0-9]{4}$')
+          && request.resource.data.naamKey is string
+          && !exists(/databases/$(database)/documents/klassen/$(klas)/namen/$(request.resource.data.naamKey))
+          && existsAfter(/databases/$(database)/documents/klassen/$(klas)/namen/$(request.resource.data.naamKey))
+          && getAfter(/databases/$(database)/documents/klassen/$(klas)/namen/$(request.resource.data.naamKey)).data.naam
+               == request.resource.data.naam;
+        allow read, write: if isLeerkracht();
+      }
+
+      // ---- werk ----
+      match /werk/{werkId} {
+        function geldigLeerlingWerk() {
+          let d = request.resource.data;
+          let acc = /databases/$(database)/documents/klassen/$(klas)/accounts/$(d.acct);
+          return d.keys().hasOnly(['acct', 'leerling', 'opdracht', 'antwoorden', 'status',
+                                   'bijgewerkt', 'ingeleverd', 'feedback', 'nagekeken'])
+            && d.acct is string
+            && d.opdracht is string
+            && werkId == d.opdracht + '__' + d.acct
+            && exists(acc)
+            && get(acc).data.naam == d.leerling
+            && d.antwoorden is map && d.antwoorden.size() <= 40
+            && d.status is map;
+        }
+
+        allow get: if ingelogd();
+
+        allow create: if ingelogd()
+          && geldigLeerlingWerk()
+          && !('feedback' in request.resource.data)
+          && !('nagekeken' in request.resource.data);
+
+        allow update: if ingelogd()
+          && geldigLeerlingWerk()
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['antwoorden', 'status', 'bijgewerkt', 'ingeleverd']);
+
+        allow read, write: if isLeerkracht();
+      }
+    }
+  }
+}

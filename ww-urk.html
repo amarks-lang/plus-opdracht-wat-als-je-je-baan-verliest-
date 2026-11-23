@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plus-opdracht: Wat als je je baan kwijtraakt?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stijl.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="kop">
+    <span class="badge">⭐ PLUS-OPDRACHT</span>
+    <h1>Wat als je je baan kwijtraakt?</h1>
+    <p class="sub">Je hebt geleerd dat veel vissers hun werk kwijtraakten door de Afsluitdijk. Hoe zit dat nu? Wat gebeurt er als iemand vandaag zijn baan verliest? Jij gaat het uitzoeken op internet!</p>
+    <div class="wie" id="wie" hidden>
+      <span>👋 Hoi <span id="wieNaam"></span>!</span>
+      <button id="wissel">Niet jij?</button>
+      <span class="opslag" id="opslag">☁️ Opgeslagen</span>
+    </div>
+  </header>
+
+  <!-- ============ INLOGGEN ============ -->
+  <section class="login" id="login">
+    <div id="stapCode">
+      <h2>Log in</h2>
+      <p>Typ de klascode die de meester je heeft gegeven.</p>
+      <div class="rij">
+        <input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="klascode">
+        <button class="knop check groot" id="codeKnop">Verder ➜</button>
+      </div>
+    </div>
+    <div id="stapKeuze" hidden>
+      <h2>Ben je al eerder begonnen?</h2>
+      <div class="keuze">
+        <button id="kiesVerder"><span>🔁</span>Ik ga verder<small>Ik heb al een naam en code</small></button>
+        <button id="kiesNieuw"><span>🆕</span>Ik ben nieuw<small>Ik maak een naam en code</small></button>
+      </div>
+      <p><button class="knop tip" id="andereCode" style="font-size:14px;padding:4px 10px">← andere klascode</button></p>
+    </div>
+    <div id="stapForm" hidden>
+      <h2 id="formTitel">Log in</h2>
+      <p id="formUitleg"></p>
+      <label class="veld" for="lNaam">Je voornaam</label>
+      <input id="lNaam" autocomplete="off" maxlength="30" placeholder="Bijv. Anna">
+      <label class="veld" for="lPin">Je geheime code (4 cijfers)</label>
+      <input id="lPin" class="pin" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
+      <div class="rij">
+        <button class="knop check groot" id="formKnop">Inloggen</button>
+        <button class="knop tip groot" id="formTerug">← Terug</button>
+      </div>
+    </div>
+    <div id="stapGemaakt" hidden>
+      <h2>Gelukt! 🎉</h2>
+      <p>Jouw naam is <b id="gNaam"></b> en je geheime code is:</p>
+      <div class="pinGroot" id="gPin"></div>
+      <p><b>Onthoud je code goed!</b> Die heb je nodig als je de volgende keer verder wilt. Vertel hem aan niemand, alleen aan de meester als je hem vergeten bent.</p>
+      <button class="knop check groot" id="gVerder">Ik heb hem onthouden ➜</button>
+    </div>
+    <div class="fout" id="fout"></div>
+    <div class="demo" id="demoMelding" hidden>🧪 Demo-modus: er is nog geen database gekoppeld. Gebruik klascode <b>demo</b>. Alles blijft alleen op deze computer.</div>
+  </section>
+
+  <!-- ============ OPDRACHT ============ -->
+  <main id="opdracht" hidden>
+    <div class="feedback" id="feedback" hidden><b>💬 Bericht van de meester</b><span id="feedbackTekst"></span></div>
+
+    <div class="voortgang">
+      <span id="vtekst">0 van 9 opdrachten goed</span>
+      <div class="balk"><span id="vbalk"></span></div>
+    </div>
+
+    <div class="pad">
+
+      <section class="stap" style="--kleur:var(--roest)">
+        <div class="nr">1</div>
+        <div class="label">Lees eerst</div>
+        <h2>De vissers van toen</h2>
+        <p>Toen de Afsluitdijk klaar was (in 1932), werd de zoute Zuiderzee een zoet meer. Veel vissen verdwenen. Sommige vissers vonden ander werk, anderen gingen op de Noordzee vissen. Een deel werd <b>werkloos</b>. Ze kregen een beetje geld van de overheid, maar dat was bijna niet genoeg om van te leven.</p>
+        <p>Tegenwoordig is daar een regel voor. Die gaan we nu bekijken.</p>
+      </section>
+
+      <section class="stap" style="--kleur:var(--oranje)">
+        <div class="nr">2</div>
+        <div class="label">Woordenkast</div>
+        <h2>Moeilijke woorden</h2>
+        <p>Op de website staan best lastige woorden. Tik op een woord voor de uitleg.</p>
+        <div class="woorden">
+          <button class="woord"><b>werkloos</b><span>Je hebt geen betaald werk (meer).</span></button>
+          <button class="woord"><b>uitkering</b><span>Geld dat je krijgt als je zelf (even) geen geld kunt verdienen.</span></button>
+          <button class="woord"><b>ontslag</b><span>Je mag niet meer bij je werk blijven, of je stopt er zelf mee.</span></button>
+          <button class="woord"><b>voorwaarde / eis</b><span>Iets wat moet kloppen. Klopt het niet? Dan krijg je het niet.</span></button>
+          <button class="woord"><b>aanvragen</b><span>Vragen of je iets mag krijgen, meestal met een formulier.</span></button>
+          <button class="woord"><b>UWV</b><span>Een organisatie van de overheid. Die helpt mensen die geen werk hebben.</span></button>
+          <button class="woord"><b>gemeente</b><span>Het bestuur van jouw dorp of stad, zoals de gemeente Houten.</span></button>
+          <button class="woord"><b>procent (%)</b><span>Hoeveel van de 100. 100% is alles, 50% is de helft.</span></button>
+        </div>
+      </section>
+
+      <section class="stap" style="--kleur:var(--geel)">
+        <div class="nr">3</div>
+        <div class="label">Zoektruc</div>
+        <h2>Zoek slim op een lange pagina</h2>
+        <p>De website is geschreven voor volwassenen en de tekst is lang. Je hoeft niet alles te lezen! Gebruik de zoektruc:</p>
+        <p>Druk op <kbd>Ctrl</kbd> + <kbd>F</kbd> en typ een woord. De computer laat zien waar het woord staat.</p>
+        <div class="zoekdemo">🔎 Je typt: <b>procent</b> → "...krijg je 75 <mark>procent</mark> van je loon..."</div>
+        <p style="font-size:16px;color:var(--zacht)">Bij elke vraag staat een tip met een goed zoekwoord.</p>
+      </section>
+
+      <section class="stap" style="--kleur:var(--groen)">
+        <div class="nr">4</div>
+        <div class="label">De website</div>
+        <h2>Open de website van het Nibud</h2>
+        <p>Het Nibud geeft mensen uitleg over geld. De website opent in een nieuw tabblad. Zo kun je heen en weer klikken tussen de website en deze pagina.</p>
+        <a class="groot-link" href="https://www.nibud.nl/onderwerpen/werken/werkloos/" target="_blank" rel="noopener">
+          <span class="ico">🌐</span>
+          <span>Naar nibud.nl<small>Werkloosheid en uitkeringen</small></span>
+        </a>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--oranje)" data-q="a">
+        <div class="nr">5</div>
+        <div class="label">Vraag a</div>
+        <p class="vraag">Hoe heet het geld dat je kunt krijgen als je even geen werk hebt?</p>
+        <textarea placeholder="Typ hier je antwoord"></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Kijk naar de kopjes bovenaan de pagina. Het geld heeft een naam met twee hoofdletters.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--roest)" data-q="b">
+        <div class="nr">6</div>
+        <div class="label">Vraag b</div>
+        <p class="vraag">Noem minstens twee eisen. Daaraan moet je voldoen om een WW-uitkering te krijgen.</p>
+        <textarea placeholder="1. ...&#10;2. ..."></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Zoek het kopje <b>"Heb je recht op WW?"</b> Daaronder staat een lijstje. Schrijf twee eisen op in je eigen woorden.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--groen)" data-q="c">
+        <div class="nr">7</div>
+        <div class="label">Vraag c</div>
+        <p class="vraag">Waar moet je een WW-uitkering aanvragen?</p>
+        <textarea placeholder="Typ hier je antwoord"></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Zoek met <kbd>Ctrl</kbd> + <kbd>F</kbd> op het woord <b>aanvragen</b>. Het is een organisatie met drie letters.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--geel)" data-q="d">
+        <div class="nr">8</div>
+        <div class="label">Vraag d</div>
+        <p class="vraag">Hoelang duurt een WW-uitkering maximaal? (Maximaal betekent: het langst.)</p>
+        <textarea placeholder="Typ hier je antwoord"></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Zoek met <kbd>Ctrl</kbd> + <kbd>F</kbd> op <b>maanden</b> of op <b>maximaal</b>.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--lime)" data-q="e">
+        <div class="nr">9</div>
+        <div class="label">Vraag e</div>
+        <p class="vraag">Hoe hoog is een WW-uitkering?</p>
+        <textarea placeholder="Typ hier je antwoord"></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Zoek op het woord <b>procent</b>. Let op: er staan twee getallen. Eén voor de eerste twee maanden en één voor daarna.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap vraagstap" style="--kleur:var(--roest)" data-q="f">
+        <div class="nr">10</div>
+        <div class="label">Vraag f</div>
+        <p class="vraag">Welke uitkering kun je aanvragen als je geen recht (meer) hebt op een WW-uitkering?</p>
+        <textarea placeholder="Typ hier je antwoord"></textarea>
+        <div class="knoppen"><button class="knop check">Controleer</button><button class="knop tip">💡 Tip</button></div>
+        <div class="tiptekst">Kijk bij het laatste kopje van de pagina. Extra punt: schrijf ook op <b>bij wie</b> je die aanvraagt.</div>
+        <div class="fb"></div>
+      </section>
+
+      <section class="stap" style="--kleur:var(--oranje)" id="reken">
+        <div class="nr">11</div>
+        <div class="label">🧮 Uitdaging</div>
+        <h2>Reken het uit: visser Klaas</h2>
+        <p>Visser Klaas verdiende <b>€ 2.000</b> per maand. Hij raakt zijn werk kwijt en krijgt WW.</p>
+        <div class="reken">
+          <label for="r1">1. In de eerste 2 maanden krijgt hij <b>75%</b>. Hoeveel euro per maand is dat?</label>
+          <div class="euro"><input class="getal" id="r1" inputmode="numeric" autocomplete="off"></div>
+          <div class="fb r-fb" id="r1fb"></div>
+          <label for="r2">2. Vanaf maand 3 krijgt hij <b>70%</b>. Hoeveel euro per maand is dat?</label>
+          <div class="euro"><input class="getal" id="r2" inputmode="numeric" autocomplete="off"></div>
+          <div class="fb r-fb" id="r2fb"></div>
+          <label for="r3">3. Hoeveel krijgt hij <b>in totaal</b> in de eerste 3 maanden?</label>
+          <div class="euro"><input class="getal" id="r3" inputmode="numeric" autocomplete="off"></div>
+          <div class="fb r-fb" id="r3fb"></div>
+        </div>
+        <div class="knoppen"><button class="knop check" id="rcheck">Controleer</button><button class="knop tip" id="rtip">💡 Tip</button></div>
+        <div class="tiptekst" id="rtiptekst">75% is hetzelfde als <b>driekwart</b>: deel eerst door 4, doe dan keer 3.<br>Voor 70%: 10% is één tiende. Deel door 10, doe dan keer 7.</div>
+      </section>
+
+      <section class="stap" style="--kleur:var(--groen)" id="denk">
+        <div class="nr">12</div>
+        <div class="label">🤔 Denkvragen</div>
+        <h2>Wat vind jij?</h2>
+        <p class="vraag" style="margin-top:8px">1. Klaas krijgt geen 100% van zijn loon, maar minder. Waarom zou dat zo zijn, denk je?</p>
+        <textarea id="d1" placeholder="Ik denk dat..."></textarea>
+        <p class="vraag" style="margin-top:14px">2. Stel: jij bent visser op Urk in 1932 en je kunt niet meer vissen op de Zuiderzee. Wat zou jij doen? Leg uit waarom.</p>
+        <textarea id="d2" placeholder="Ik zou..."></textarea>
+      </section>
+
+      <section class="stap" style="--kleur:var(--roest)" id="klaar">
+        <div class="nr">🏁</div>
+        <div class="label">Klaar?</div>
+        <h2>Lever je werk in</h2>
+        <p>Je werk wordt vanzelf bewaard ☁️. Nog niet klaar? Geen probleem! Log de volgende keer weer in met dezelfde klascode en je naam, dan ga je verder waar je was.</p>
+        <p>Ben je helemaal klaar? Klik dan op de knop. Daarna kan de meester je werk nakijken.</p>
+        <div class="knoppen"><button class="knop check groot" id="inleveren">✅ Ik ben klaar: inleveren</button></div>
+        <div class="ingeleverd-melding" id="ingeleverdMelding"></div>
+      </section>
+
+    </div>
+  </main>
+  <footer>Plus-opdracht bij de les over de vissers van Urk · Bron: nibud.nl</footer>
+</div>
+
+<script type="module">
+import { DEMO, haalKlas, registreer, login, haalWerk, bewaarWerk, werkId, naamSleutel, geldigePin } from "./firebase.js";
+
+const OPDRACHT = "ww-urk";
+const CODE_KEY = "plus-klascode";
+const $ = id => document.getElementById(id);
+const norm = s => (s || "").toLowerCase().replace(/\s+/g, " ").trim();
+
+let klasCode = null, klas = null, leerling = null, acct = null, modus = "verder", nieuwAccount = null;
+let laden = false, ingeleverd = false, timer = null;
+const status = {};
+
+// ================= INLOGGEN =================
+if (DEMO) $("demoMelding").hidden = false;
+try { const c = localStorage.getItem(CODE_KEY); if (c) $("code").value = c; } catch (e) {}
+
+async function controleerCode() {
+  const code = $("code").value.trim().toLowerCase();
+  $("fout").textContent = "";
+  if (!code) { $("fout").textContent = "Typ eerst de klascode."; return; }
+  $("codeKnop").disabled = true; $("codeKnop").textContent = "Even zoeken...";
+  try {
+    const k = await haalKlas(code);
+    if (!k) { $("fout").textContent = "Deze klascode ken ik niet. Kijk nog eens goed."; return; }
+    klasCode = code; klas = k;
+    try { localStorage.setItem(CODE_KEY, code); } catch (e) {}
+    toonStap("stapKeuze");
+  } catch (e) {
+    console.error(e);
+    $("fout").textContent = "Er ging iets mis met de verbinding. Probeer het nog eens.";
+  } finally {
+    $("codeKnop").disabled = false; $("codeKnop").textContent = "Verder ➜";
+  }
+}
+function toonStap(id) {
+  ["stapCode", "stapKeuze", "stapForm", "stapGemaakt"].forEach(s => $(s).hidden = s !== id);
+  $("fout").textContent = "";
+}
+function openForm(m) {
+  modus = m;
+  $("formTitel").textContent = m === "nieuw" ? "Maak je eigen login" : "Log in";
+  $("formUitleg").textContent = m === "nieuw"
+    ? "Typ je voornaam en verzin een geheime code van 4 cijfers. Kies iets wat je makkelijk onthoudt."
+    : "Typ je voornaam en je geheime code van 4 cijfers.";
+  $("formKnop").textContent = m === "nieuw" ? "Maak aan" : "Inloggen";
+  $("lNaam").value = ""; $("lPin").value = "";
+  toonStap("stapForm"); $("lNaam").focus();
+}
+async function verstuurForm() {
+  const naam = $("lNaam").value, pin = $("lPin").value.trim();
+  $("fout").textContent = "";
+  if (naamSleutel(naam).length < 2) { $("fout").textContent = "Typ je voornaam."; return; }
+  if (!geldigePin(pin)) { $("fout").textContent = "Je code moet precies 4 cijfers zijn."; return; }
+  $("formKnop").disabled = true;
+  try {
+    if (modus === "nieuw") {
+      try { nieuwAccount = await registreer(klasCode, naam, pin); }
+      catch (e) {
+        if (e.message === "naam-bezet") {
+          $("fout").textContent = "Deze naam bestaat al in jouw klas. Ben je al eerder begonnen? Klik dan op Terug en kies \"Ik ga verder\". Heeft een klasgenoot dezelfde naam? Zet dan de eerste letter van je achternaam erachter, bijv. \"Sem B\".";
+          return;
+        }
+        throw e;
+      }
+      $("gNaam").textContent = nieuwAccount.naam; $("gPin").textContent = pin;
+      toonStap("stapGemaakt");
+    } else {
+      const a = await login(klasCode, naam, pin);
+      if (!a) { $("fout").textContent = "Naam of code klopt niet. Kijk nog eens goed. Ben je je code vergeten? Vraag het aan de meester."; return; }
+      await start(a);
+    }
+  } catch (e) {
+    console.error(e);
+    $("fout").textContent = "Er ging iets mis met de verbinding. Probeer het nog eens.";
+  } finally { $("formKnop").disabled = false; }
+}
+async function start(a) {
+  try {
+    const w = await haalWerk(klasCode, werkId(OPDRACHT, a.acct));
+    acct = a.acct; leerling = a.naam;
+    vulIn(w);
+    $("login").hidden = true; $("opdracht").hidden = false; $("wie").hidden = false;
+    $("wieNaam").textContent = leerling;
+    zetOpslag("ok");
+    window.scrollTo({ top: 0 });
+  } catch (e) {
+    console.error(e);
+    $("fout").textContent = "Je werk kon niet geladen worden. Probeer het nog eens.";
+  }
+}
+$("codeKnop").addEventListener("click", controleerCode);
+$("code").addEventListener("keydown", e => { if (e.key === "Enter") controleerCode(); });
+$("andereCode").addEventListener("click", () => { toonStap("stapCode"); $("code").focus(); });
+$("kiesVerder").addEventListener("click", () => openForm("verder"));
+$("kiesNieuw").addEventListener("click", () => openForm("nieuw"));
+$("formTerug").addEventListener("click", () => toonStap("stapKeuze"));
+$("formKnop").addEventListener("click", verstuurForm);
+["lNaam", "lPin"].forEach(id => $(id).addEventListener("keydown", e => { if (e.key === "Enter") verstuurForm(); }));
+$("lPin").addEventListener("input", () => { $("lPin").value = $("lPin").value.replace(/\D/g, "").slice(0, 4); });
+$("gVerder").addEventListener("click", () => start(nieuwAccount));
+$("wissel").addEventListener("click", async () => {
+  await nuBewaren();
+  location.reload();
+});
+
+// ================= OPSLAAN =================
+function zetOpslag(s) {
+  const el = $("opslag");
+  el.textContent = s === "ok" ? "☁️ Opgeslagen" : s === "bezig" ? "⏳ Opslaan..." : "⚠️ Niet opgeslagen";
+  el.title = s === "fout" ? "Check of je internet hebt. Je werk wordt opnieuw geprobeerd." : "";
+}
+function verzamel() {
+  const antwoorden = {};
+  stappen.forEach(st => antwoorden[st.dataset.q] = st.querySelector("textarea").value);
+  ["r1", "r2", "r3", "d1", "d2"].forEach(id => antwoorden[id] = $(id).value);
+  return { acct, leerling, opdracht: OPDRACHT, antwoorden, status: { ...status }, ingeleverd };
+}
+function plan() {
+  if (laden || !leerling) return;
+  zetOpslag("bezig");
+  clearTimeout(timer);
+  timer = setTimeout(nuBewaren, 900);
+}
+async function nuBewaren() {
+  clearTimeout(timer); timer = null;
+  if (!leerling) return;
+  try { await bewaarWerk(klasCode, werkId(OPDRACHT, acct), verzamel()); zetOpslag("ok"); }
+  catch (e) { console.error(e); zetOpslag("fout"); timer = setTimeout(nuBewaren, 5000); }
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden" && timer) nuBewaren(); });
+
+// ================= NAKIJKEN PER VRAAG =================
+const checks = {
+  a(t) {
+    if (/bijstand/.test(t)) return ["bijna", "Die bestaat ook, maar die hoort bij vraag f. Welk geld krijg je eerst als je je baan kwijt bent?"];
+    if (/\bww\b|ww-|werkloosheid/.test(t)) return ["goed", "Goed zo! Het heet de WW-uitkering. WW staat voor Werkloosheidswet."];
+    return ["bijna", "Nog niet helemaal. Kijk naar de kopjes op de pagina."];
+  },
+  b(t) {
+    const eisen = [/schuld/, /26|36|weken/, /beschikbaar|ander werk|nieuw werk|ander soort werk/,
+      /\buur|uren/, /voorkom|alles gedaan|alles aan gedaan/, /nederland/, /aow|jonger/];
+    const n = eisen.filter(r => r.test(t)).length;
+    if (n >= 2) return ["goed", "Top! Je hebt minstens twee eisen gevonden."];
+    if (n === 1) return ["bijna", "Goed, één eis heb je al! Nu nog eentje uit het lijstje."];
+    return ["bijna", "Zoek het kopje \"Heb je recht op WW?\" Daaronder staat een lijstje met eisen."];
+  },
+  c(t) {
+    if (/uwv|werk\.?nl/.test(t)) return ["goed", "Klopt! Je vraagt de WW aan bij het UWV (online, via werk.nl)."];
+    if (/gemeente/.test(t)) return ["bijna", "De gemeente hoort bij een andere uitkering. Zoek nog eens op het woord 'aanvragen'."];
+    return ["bijna", "Nog niet. Het is een organisatie met drie letters."];
+  },
+  d(t) {
+    if (/24|vierentwintig|2 jaar|twee jaar/.test(t)) return ["goed", "Goed! Maximaal 24 maanden. Dat is 2 jaar."];
+    if (/\b3\b|drie/.test(t)) return ["bijna", "Dat is de kortste tijd. Hoe lang duurt het maximaal (het langst)?"];
+    return ["bijna", "Nog niet. Zoek op het woord 'maanden'."];
+  },
+  e(t) {
+    const a = /75/.test(t), b = /70/.test(t);
+    if (a && b) return ["goed", "Super! Eerst 75% van je loon, en na twee maanden 70%."];
+    if (a || b) return ["bijna", "Goed bezig! Er is nog een tweede getal. Eén voor de eerste twee maanden en één voor daarna."];
+    return ["bijna", "Zoek op het woord 'procent'. Je zoekt twee getallen."];
+  },
+  f(t) {
+    if (/bijstand/.test(t)) return ["goed", /gemeente/.test(t)
+      ? "Helemaal goed, ook het extra punt! Bijstand vraag je aan bij de gemeente."
+      : "Goed! De bijstandsuitkering. Weet je ook bij wie je die aanvraagt?"];
+    return ["bijna", "Nog niet. Kijk bij het laatste kopje van de pagina."];
+  }
+};
+
+function toonFb(el, soort, tekst) {
+  el.className = (el.classList.contains("r-fb") ? "fb r-fb " : "fb ") + soort;
+  el.textContent = (soort === "goed" ? "✅ " : "🔍 ") + tekst;
+}
+function wisFb(el) { el.className = el.classList.contains("r-fb") ? "fb r-fb" : "fb"; el.textContent = ""; }
+
+const stappen = [...document.querySelectorAll(".vraagstap")];
+function kijkVraag(st) {
+  const q = st.dataset.q, fb = st.querySelector(".fb");
+  const t = norm(st.querySelector("textarea").value);
+  if (!t) { toonFb(fb, "bijna", "Typ eerst een antwoord."); delete status[q]; return; }
+  const [soort, tekst] = checks[q](t);
+  toonFb(fb, soort, tekst);
+  status[q] = soort;
+  st.classList.toggle("klaar", soort === "goed");
+}
+stappen.forEach(st => {
+  const q = st.dataset.q;
+  st.querySelector(".check").addEventListener("click", () => { kijkVraag(st); update(); plan(); });
+  st.querySelector(".tip").addEventListener("click", () => st.querySelector(".tiptekst").classList.toggle("open"));
+  st.querySelector("textarea").addEventListener("input", () => {
+    if (status[q]) { delete status[q]; st.classList.remove("klaar"); wisFb(st.querySelector(".fb")); update(); }
+    plan();
+  });
+});
+
+// ================= REKENEN =================
+const rek = [["r1", 1500, "Klopt! 2000 : 4 = 500, en 3 × 500 = € 1.500."],
+             ["r2", 1400, "Klopt! 10% is € 200, dus 70% is 7 × 200 = € 1.400."],
+             ["r3", 4400, "Knap! 1.500 + 1.500 + 1.400 = € 4.400."]];
+const getal = s => Number(String(s).replace(/[€\s.]/g, "").replace(",", "."));
+function kijkReken() {
+  rek.forEach(([id, goed, uitleg]) => {
+    const v = $(id).value, fb = $(id + "fb");
+    if (!v.trim()) { toonFb(fb, "bijna", "Vul hier nog een getal in."); delete status[id]; return; }
+    if (getal(v) === goed) { toonFb(fb, "goed", uitleg); status[id] = "goed"; }
+    else { toonFb(fb, "bijna", "Nog niet goed. Kijk bij de tip en reken het nog eens na."); status[id] = "bijna"; }
+  });
+  $("reken").classList.toggle("klaar", rek.every(([id]) => status[id] === "goed"));
+}
+$("rcheck").addEventListener("click", () => { kijkReken(); update(); plan(); });
+$("rtip").addEventListener("click", () => $("rtiptekst").classList.toggle("open"));
+rek.forEach(([id]) => $(id).addEventListener("input", () => {
+  if (status[id]) { delete status[id]; wisFb($(id + "fb")); $("reken").classList.remove("klaar"); update(); }
+  plan();
+}));
+
+// ================= WOORDEN & DENKVRAGEN =================
+document.querySelectorAll(".woord").forEach(w => w.addEventListener("click", () => w.classList.toggle("open")));
+function markeerDenk() {
+  $("denk").classList.toggle("klaar", ["d1", "d2"].every(id => $(id).value.trim().length >= 10));
+}
+["d1", "d2"].forEach(id => $(id).addEventListener("input", () => { markeerDenk(); plan(); }));
+
+// ================= INLEVEREN =================
+function toonIngeleverd() {
+  $("inleveren").textContent = ingeleverd ? "✅ Ingeleverd" : "✅ Ik ben klaar: inleveren";
+  $("ingeleverdMelding").textContent = ingeleverd
+    ? "Je werk is ingeleverd. Je mag het nog verbeteren, dat wordt ook bewaard." : "";
+}
+$("inleveren").addEventListener("click", async () => {
+  ingeleverd = true; toonIngeleverd(); await nuBewaren();
+});
+
+// ================= VOORTGANG =================
+const TOTAAL = 9;
+function update() {
+  const n = Object.values(status).filter(s => s === "goed").length;
+  $("vtekst").textContent = n + " van " + TOTAAL + " opdrachten goed";
+  $("vbalk").style.width = (n / TOTAAL * 100) + "%";
+}
+
+// ================= OPGESLAGEN WERK TERUGZETTEN =================
+function vulIn(w) {
+  laden = true;
+  const a = (w && w.antwoorden) || {};
+  stappen.forEach(st => { st.querySelector("textarea").value = a[st.dataset.q] || ""; });
+  ["r1", "r2", "r3", "d1", "d2"].forEach(id => $(id).value = a[id] || "");
+  const oud = (w && w.status) || {};
+  // alleen vragen die al eens nagekeken waren, opnieuw laten zien
+  stappen.forEach(st => { if (oud[st.dataset.q] && st.querySelector("textarea").value.trim()) kijkVraag(st); });
+  if (["r1", "r2", "r3"].some(id => oud[id])) kijkReken();
+  markeerDenk();
+  ingeleverd = !!(w && w.ingeleverd);
+  toonIngeleverd();
+  if (w && w.feedback && w.feedback.trim()) { $("feedback").hidden = false; $("feedbackTekst").textContent = w.feedback; }
+  update();
+  laden = false;
+}
+</script>
+</body>
+</html>

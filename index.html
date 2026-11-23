@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plus-opdrachten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stijl.css">
+<style>
+  .lijst{display:grid;gap:14px;margin-top:18px}
+  .lijst a{display:block;background:#fff;border-radius:18px;padding:18px 20px;text-decoration:none;color:var(--tekst);border-left:8px solid var(--oranje);box-shadow:0 2px 0 var(--lijn)}
+  .lijst a b{font-size:21px;font-weight:900;display:block}
+  .lijst a span{color:var(--zacht);font-size:16px}
+  .lk{text-align:center;margin-top:30px;font-size:14px}
+  .lk a{color:var(--zacht)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="kop">
+    <span class="badge">⭐ PLUS-OPDRACHTEN</span>
+    <h1>Kies je opdracht</h1>
+    <p class="sub">Extra uitdaging voor als je klaar bent.</p>
+  </header>
+  <div class="lijst" id="lijst"></div>
+  <p class="lk"><a href="leerkracht.html">Leerkracht</a></p>
+</div>
+<script type="module">
+import { OPDRACHTEN } from "./opdrachten.js";
+const box = document.getElementById("lijst");
+OPDRACHTEN.forEach(o => {
+  const a = document.createElement("a"); a.href = o.bestand;
+  const b = document.createElement("b"); b.textContent = o.titel;
+  const s = document.createElement("span"); s.textContent = o.bij;
+  a.append(b, s); box.appendChild(a);
+});
+</script>
+</body>
+</html>
