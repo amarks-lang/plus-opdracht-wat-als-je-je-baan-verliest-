@@ -76,6 +76,7 @@ const inKlas = (obj, klas) => Object.entries(obj).filter(([k]) => k.startsWith(k
 async function leerlingStart() {
   if (DEMO) return;
   await laadFirebase();
+  await auth.authStateReady();          // eerst kijken of er al iemand ingelogd is (bijv. de leerkracht)
   if (!auth.currentUser) await au.signInAnonymously(auth);
 }
 
@@ -188,12 +189,16 @@ export async function volgAccounts(klas, cb) {
     s => cb(s.docs.map(d => ({ acct: d.id, ...d.data() }))));
 }
 
-// Account verwijderen: daarna is de naam weer vrij (het werk blijft bewaard).
+// Account verwijderen, samen met al het werk van die leerling. Daarna is de naam weer vrij.
 export async function verwijderAccount(klas, acct, naamKey) {
   if (DEMO) {
-    const d = dDb(); delete d.accounts[klas + "/" + acct]; delete d.namen[klas + "/" + naamKey]; dSchrijf(d); return;
+    const d = dDb(); delete d.accounts[klas + "/" + acct]; delete d.namen[klas + "/" + naamKey];
+    Object.keys(d.werk).forEach(k => { if (k.startsWith(klas + "/") && d.werk[k].acct === acct) delete d.werk[k]; });
+    dSchrijf(d); return;
   }
   const b = fs.writeBatch(db);
+  const werk = await fs.getDocs(fs.query(fs.collection(db, "klassen", klas, "werk"), fs.where("acct", "==", acct)));
+  werk.docs.forEach(w => b.delete(w.ref));
   b.delete(fs.doc(db, "klassen", klas, "accounts", acct));
   b.delete(fs.doc(db, "klassen", klas, "namen", naamKey));
   await b.commit();

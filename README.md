@@ -32,7 +32,7 @@ Zolang er geen config in `firebase.js` staat, draait alles in **demo-modus** (kl
 - Leerlingen kunnen geen klassenlijsten, namen of codes opvragen en geen feedback van de leerkracht aanpassen.
 - Werk opslaan gebeurt onder een hash van klas + naam + code. Zonder de code van een klasgenoot kun je diens werk dus niet openen.
 - Elke naam kan maar één keer per klas bestaan. Zijn er twee kinderen met dezelfde naam, dan zet de tweede er een letter achter (bijv. "Sem B").
-- Code vergeten? De leerkracht ziet alle codes bij Klassen → (klas) → Leerlingen. Verwijder je daar een leerling, dan is de naam weer vrij.
+- Code vergeten? De leerkracht ziet alle codes bij Klassen → (klas) → Leerlingen. Verwijder je daar een leerling, dan worden ook diens antwoorden verwijderd en is de naam weer vrij.
 
 ## Nieuwe plus-opdracht toevoegen
 Kopieer `ww-urk.html` naar een nieuw bestand, pas de vragen en de `OPDRACHT`-id aan en voeg een blok toe aan `opdrachten.js`. Database, login en leerkrachtpagina werken dan meteen mee.
