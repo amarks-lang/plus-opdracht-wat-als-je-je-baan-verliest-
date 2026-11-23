@@ -15,7 +15,6 @@ rules_version = '2';
 //   - NIET de feedback of 'nagekeken' van de leerkracht aanpassen
 // De leerkracht (Google-account hieronder) mag alles.
 //
-// !! Vervang het e-mailadres hieronder door jouw eigen schoolaccount !!
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -23,7 +22,7 @@ service cloud.firestore {
     function isLeerkracht() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['jouw.naam@levwn.nl'];
+        && request.auth.token.email in ['a.marks@levwn.nl'];
     }
     function ingelogd() { return request.auth != null; }
 

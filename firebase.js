@@ -7,17 +7,17 @@
 // 1) Plak hier de config van je Firebase-web-app
 //    (Firebase console → Projectinstellingen → Je apps → Web-app → Config)
 export const firebaseConfig = {
-  apiKey: "VUL_HIER_IN",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyD2FUMSdvKbaAdVuiBAIRZxXsdMSy7QQVk",
+  authDomain: "plusopdrachten.firebaseapp.com",
+  projectId: "plusopdrachten",
+  storageBucket: "plusopdrachten.firebasestorage.app",
+  messagingSenderId: "681793459434",
+  appId: "1:681793459434:web:ed97b639b8f16f4a69b393"
 };
 
 // 2) E-mailadres(sen) van leerkrachten die mogen nakijken.
 //    Zet hetzelfde adres ook in firestore.rules (dat is de echte beveiliging).
-export const LEERKRACHTEN = ["jouw.naam@levwn.nl"];
+export const LEERKRACHTEN = ["a.marks@levwn.nl"];
 
 // ---------------------------------------------------------------------
 export const DEMO = !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("VUL");
