@@ -36,3 +36,6 @@ Zolang er geen config in `firebase.js` staat, draait alles in **demo-modus** (kl
 
 ## Nieuwe plus-opdracht toevoegen
 Kopieer `ww-urk.html` naar een nieuw bestand, pas de vragen en de `OPDRACHT`-id aan en voeg een blok toe aan `opdrachten.js`. Database, login en leerkrachtpagina werken dan meteen mee.
+
+## Updates
+GitHub Pages laat browsers bestanden tot 10 minuten bewaren. Pas je `firebase.js` of `opdrachten.js` aan, verhoog dan het versienummer in de imports van de html-bestanden (`./firebase.js?v=2` → `?v=3`). Gebruik overal hetzelfde nummer, anders draaien er twee kopieën van de code.

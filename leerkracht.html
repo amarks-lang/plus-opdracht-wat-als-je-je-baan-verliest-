@@ -179,8 +179,8 @@
 <script type="module">
 import { DEMO, volgLeerkracht, loginLeerkracht, logoutLeerkracht, isLeerkracht,
          lijstKlassen, bewaarKlas, verwijderKlas, volgWerk, volgAccounts, verwijderAccount,
-         bewaarNakijk, werkId } from "./firebase.js";
-import { OPDRACHTEN } from "./opdrachten.js";
+         bewaarNakijk, werkId } from "./firebase.js?v=2";
+import { OPDRACHTEN } from "./opdrachten.js?v=2";
 
 const $ = id => document.getElementById(id);
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
